@@ -1,0 +1,5 @@
+RewriteEngine On
+      RewriteCond %{HTTP_HOST} ^fomichev\.php1601\.uitclassroom\.com$ 
+      
+      RewriteCond %{REQUEST_URI} !^/PHPcourses/Fomichev_Dmitrij/Store/
+      RewriteRule (.*)   /PHPcourses/Fomichev_Dmitrij/Store/$1
