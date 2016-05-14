@@ -1,7 +1,6 @@
 <?php
 session_start();
-define("ROOT", dirname(__DIR__));
-require_once ROOT . "/Store/db.php";
+require_once "db.php";
 
 function login()
 {
@@ -15,7 +14,7 @@ function login()
         if (empty($login) || empty($password)) {
             $err[] = "Заполните все поля!";
         } else {
-            $sql = "SELECT `login`,`password`,`avatar` FROM `user` WHERE login='$login'";
+            $sql = "SELECT `login`,`password`,`avatar` FROM `customer` WHERE login='$login'";
             $res = mysqli_query($db, $sql);
             $row = mysqli_fetch_assoc($res);
             if (mysqli_num_rows($res) < 1) {
@@ -126,7 +125,7 @@ function register()
         $password = md5($password);
 
         //записываем данные в БД
-        $sql = "INSERT INTO `user` (login, password, email, phone, avatar)
+        $sql = "INSERT INTO `customer` (login, password, email, phone, avatar)
                 VALUES ('$name', '$password', '$email', '$phone','$path_to_avatar')";
         $res = mysqli_query($db, $sql);
 
@@ -144,9 +143,10 @@ function getUserByPhone($phone)
     global $db;
 
     $sql = "SELECT login
-            FROM `user` WHERE phone='$phone'";
+            FROM `customer` WHERE phone='$phone'";
     $res = mysqli_query($db, $sql);
-
+    if(!$res) echo "херь";
+    else
     return mysqli_num_rows($res);
 }
 
