@@ -145,7 +145,7 @@ function getUserByPhone($phone)
     $sql = "SELECT login
             FROM `customer` WHERE phone='$phone'";
     $res = mysqli_query($db, $sql);
-    if(!$res) echo "херь";
+    if(!$res) return false;
     else
     return mysqli_num_rows($res);
 }
