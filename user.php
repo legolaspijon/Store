@@ -87,36 +87,34 @@ function register()
                 $err[] = "пользователь с таким номером существует";
             }
 
-            if ($_FILES['avatar']['error']) {
-                $err[] = 'ошибка загрузки файла -' . $_FILES['avatar']['error'];
-            }
         } else {
             $err[] = "Заполните поля со звездочкой (*)";
         }
 
-        //путь к папке с аватарами
-        $path_to_uploads = "uploads/";
-        //путь к папке с названием файла
-        $path_to_avatar = $path_to_uploads . $_FILES['avatar']['name'];
-        //путь к временной папке
-        $tmp = $_FILES['avatar']['tmp_name'];
+        //путь к папке с аватаром
+        $path_to = "uploads/";
+        $path_to_avatar = $path_to. "default-avatar.png";
 
-        //если существует картинка с таким названием генерируем другое название
-        if (file_exists($path_to_avatar)) {
-            $chars = 'abcdefghijklmnop123456789';
-            $numChars = strlen($chars);
-            $prefix = '';
-            for ($i = 0; $i < 5; $i++) {
-                $prefix .= substr($chars, rand(1, $numChars) - 1, 1);
+        if($avatar['size'] != 0) {
+            //путь к папке с названием файла
+            $path_to_avatar = $path_to . $_FILES['avatar']['name'];
+            //путь к временной папке
+            $tmp = $_FILES['avatar']['tmp_name'];
+            if (file_exists($path_to_avatar)) {
+                $chars = 'abcdefghijklmnop123456789';
+                $numChars = strlen($chars);
+                $prefix = '';
+                for ($i = 0; $i < 5; $i++) {
+                    $prefix .= substr($chars, rand(1, $numChars) - 1, 1);
+                }
+
+                $path_to_avatar = $path_to . $prefix . "_" . $_FILES['avatar']['name'];
             }
 
-            $path_to_avatar = $path_to_uploads . $prefix ."_". $_FILES['avatar']['name'];
+            if (!move_uploaded_file($tmp, $path_to_avatar)) {
+                $err[] = 'ошибка перемещения файла из временной дериктории';
+            }
         }
-
-        if (!move_uploaded_file($tmp, $path_to_avatar)) {
-           $err[] = 'ошибка перемещения файла из временной дериктории';
-        }
-
         if (count($err) > 0) {
             require_once "register.php";
             return;
@@ -145,9 +143,9 @@ function getUserByPhone($phone)
     $sql = "SELECT login
             FROM `customer` WHERE phone='$phone'";
     $res = mysqli_query($db, $sql);
-    if(!$res) return false;
+    if (!$res) return false;
     else
-    return mysqli_num_rows($res);
+        return mysqli_num_rows($res);
 }
 
 
